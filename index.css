@@ -1,0 +1,43 @@
+.header-arrow {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  margin-left: -5px;
+  height: 10px;
+  width: 10px;
+  transform: rotate(45deg);
+  background-color: #e8e6e8;
+}
+
+.window {
+  position: absolute;
+  top: 5px;
+}
+
+.toolbar {
+  box-shadow: none;
+}
+
+.window, .toolbar-header {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+.terminal-window {
+  overflow-x: scroll;
+  display: none;
+}
+
+.terminal-window.active {
+  display: block;
+}
+
+.close-app {
+  color: gray;
+  padding: 3px;
+  padding-right: 6px;
+}
+
+.close-app:hover {
+  color: red;
+}

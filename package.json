@@ -1,0 +1,23 @@
+{
+  "name": "tinkoff-portal",
+  "productName": "PortalWEB",
+  "version": "1.0.0",
+  "main": "main.js",
+  "license": "ISC",
+  "scripts": {
+    "start": "electron .",
+    "package": "electron-packager ./ --platform=darwin --arch=x64 --out=out --icon=./icon.icns --overwrite",
+    "create-installer-mac": "electron-installer-dmg ./out/PortalWEB-darwin-x64/PortalWEB.app tinkoff-portal-web --out=release-builds --overwrite"
+  },
+  "homepage": "https://github.com/kevinsawicki/tray-example#readme",
+  "devDependencies": {
+    "electron-installer-dmg": "^2.0.0",
+    "electron-packager": "^7.7.0",
+    "electron-prebuilt": "^1.4.13"
+  },
+  "dependencies": {
+    "fix-path": "^2.1.0",
+    "vue": "^2.5.17",
+    "xterm": "^3.6.0"
+  }
+}

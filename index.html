@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns: xmlns: xmlns:>
+<head>
+    <meta charset="utf-8">
+    <title>PortalWEB</title>
+    <link rel="stylesheet" href="./vendor/css/photon.css" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="./index.css" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="node_modules/xterm/dist/xterm.css"/>
+    <script charset="utf-8">require('./index')</script>
+</head>
+<body>
+<div class="header-arrow"></div>
+<div class="window" id="app">
+    <header class="toolbar toolbar-header">
+        <div class="toolbar-actions">
+            <div class="btn-group">
+                <button class="btn btn-default" @click="startAll">
+                    start all
+                </button>
+                <button class="btn btn-default" @click="stopAll">
+                    <span class="icon icon-cancel-circled"></span>
+                </button>
+            </div>
+            <button class="btn btn-default" @click="changeDir">
+                {{ dir }}
+            </button>
+            <span @click="exitApp" class="icon icon-cancel close-app pull-right"></span>
+        </div>
+    </header>
+    <div id="term"></div>
+    <div
+        :class="[{active: activeTab !== 'static'}, 'terminal-window']"
+        id="terminalServer"
+    >
+    </div>
+    <div
+        :class="[{active: activeTab !== 'server'}, 'terminal-window']"
+        id="terminalStatic">
+    </div>
+    <div class="tab-group">
+        <div
+            @click="activeTab = 'server'"
+            :class="[{active: activeTab === 'server'}, 'tab-item']"
+        >
+            Server
+            <span class="icon icon-play icon-close-tab start-task" v-on:click="startTask('server')"></span>
+        </div>
+        <div
+            @click="activeTab = 'static'"
+            :class="[{active: activeTab === 'static'}, 'tab-item']"
+        >
+            Static
+            <span class="icon icon-play icon-close-tab start-task" v-on:click="startTask('static')"></span>
+        </div>
+    </div>
+</div>
+</body>
+</html>
