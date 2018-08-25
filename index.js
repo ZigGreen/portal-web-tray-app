@@ -54,14 +54,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
         data: {
             dir: mainProcess.getDirectory(),
-            activeTab: null
+            activeTab: null,
+            serverActive: false,
+            staticActive: false,
         }
     });
 
     terminalStatic.open(document.getElementById('terminalStatic'));
     terminalServer.open(document.getElementById('terminalServer'));
 
-    vueApp.activeTab = 'server'
+    vueApp.activeTab = 'server';
 
+    ipcRenderer.on('started', (e, x) => {
+        if (x === serverInvest) {
+            vueApp.serverActive = true;
+        }
+        if (x === staticInvest) {
+            vueApp.staticActive = true;
+        }
+    });
 
+    ipcRenderer.on('exits', (e, x) => {
+        if (x === serverInvest) {
+            vueApp.serverActive = false;
+        }
+        if (x === staticInvest) {
+            vueApp.staticActive = false;
+        }
+    });
 });

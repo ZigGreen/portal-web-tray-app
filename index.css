@@ -45,3 +45,7 @@
 .toolbar-actions {
   -webkit-app-region: no-drag;
 }
+
+.green {
+  color: #29a03b;
+}

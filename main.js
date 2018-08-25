@@ -110,6 +110,14 @@ const start = task => {
     }
     const subproc = processes[task] = spawn('npm', ['run', task], { detached: true });
 
+    const send = (...args) => {
+        if (processes[task] === subproc || !processes[task]) {
+            window.webContents.send(...args);
+        }
+    };
+
+    send('started', task);
+
     subproc.stdout.on('data', data => {
         console.log(`stdout: ${data}`);
         if (data.toString().includes('Rebuild')) {
@@ -118,17 +126,17 @@ const start = task => {
         if (data.toString().includes('Server start on port 3000')) {
             tray.setImage(path.join(assetsDirectory, 'sunTemplate.png'));
         }
-        window.webContents.send(task, data.toString());
+        send(task, data.toString());
     });
 
     subproc.stderr.on('data', data => {
         console.log(`stderr: ${data}`);
-        window.webContents.send(task, data.toString());
+        send(task, data.toString());
     });
 
     subproc.on('close', (code) => {
         console.log(`child process exited with code ${code}`);
-        window.webContents.send('exits', task);
+        send('exits', task);
     });
 };
 
