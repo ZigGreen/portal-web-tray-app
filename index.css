@@ -41,3 +41,7 @@
 .close-app:hover {
   color: red;
 }
+
+.toolbar-actions {
+  -webkit-app-region: no-drag;
+}
