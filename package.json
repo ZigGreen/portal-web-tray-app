@@ -7,7 +7,9 @@
   "scripts": {
     "start": "electron .",
     "package": "electron-packager ./ --platform=darwin --arch=x64 --out=out --icon=./icon.icns --overwrite",
-    "create-installer-mac": "electron-installer-dmg ./out/PortalWEB-darwin-x64/PortalWEB.app tinkoff-portal-web --out=release-builds --overwrite"
+    "dmg": "electron-installer-dmg ./out/PortalWEB-darwin-x64/PortalWEB.app tinkoff-portal-web --out=builds --overwrite",
+    "clean": "rm -rf ./out ./builds ./node_modules",
+    "publich": "npm run clean && npm i && npm run package && npm run dmg"
   },
   "homepage": "https://github.com/kevinsawicki/tray-example#readme",
   "devDependencies": {
