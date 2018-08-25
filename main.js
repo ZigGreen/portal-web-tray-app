@@ -15,10 +15,13 @@ try {
 
 const assetsDirectory = path.join(__dirname, 'assets');
 
-app.commandLine.appendSwitch('remote-debugging-port', '9222')
 
 let tray = undefined;
 let window = undefined;
+
+const appName = 'invest';
+const staticInvest = `static:${appName}`;
+const serverInvest = `server:${appName}`;
 
 // Don't show the app in the doc
 app.dock.hide();
@@ -35,7 +38,15 @@ app.on('window-all-closed', () => {
 
 const createTray = () => {
     tray = new Tray(path.join(assetsDirectory, 'sunTemplate.png'))
-    tray.on('right-click', toggleWindow);
+    tray.on('right-click', () => {
+        if (!processes[staticInvest]) {
+            start(staticInvest);
+        }
+        if (!processes[serverInvest]) {
+            start(serverInvest);
+        }
+        toggleWindow();
+    });
     tray.on('double-click', toggleWindow);
     tray.on('click', function (event) {
         toggleWindow();
