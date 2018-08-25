@@ -37,7 +37,7 @@ app.on('window-all-closed', () => {
 });
 
 const createTray = () => {
-    tray = new Tray(path.join(assetsDirectory, 'sunTemplate.png'))
+    tray = new Tray(path.join(assetsDirectory, 'atom-shape.png'));
     tray.on('right-click', () => {
         if (!processes[staticInvest]) {
             start(staticInvest);
@@ -131,12 +131,6 @@ const start = task => {
 
     subproc.stdout.on('data', data => {
         console.log(`stdout: ${data}`);
-        if (data.toString().includes('Rebuild')) {
-            tray.setImage(path.join(assetsDirectory, 'cloudTemplate.png'));
-        }
-        if (data.toString().includes('Server start on port 3000')) {
-            tray.setImage(path.join(assetsDirectory, 'sunTemplate.png'));
-        }
         send(task, data.toString());
     });
 
