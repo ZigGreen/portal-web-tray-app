@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     terminalStatic.open(document.getElementById('terminalStatic'));
     terminalServer.open(document.getElementById('terminalServer'));
 
-    vueApp.activeTab = 'server';
+    vueApp.activeTab = 'static';
 
     ipcRenderer.on('started', (e, x) => {
         if (x === serverTask) {

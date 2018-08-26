@@ -44,20 +44,20 @@
     </div>
     <div class="tab-group">
         <div
-            @click="activeTab = 'server'"
-            :class="[{active: activeTab === 'server'}, 'tab-item']"
-        >
-            <span v-if="serverActive" class="icon icon-dot green"></span>
-            Server
-            <span class="icon icon-play icon-close-tab" v-on:click="startTask('server')"></span>
-        </div>
-        <div
             @click="activeTab = 'static'"
             :class="[{active: activeTab === 'static'}, 'tab-item']"
         >
             <span v-if="staticActive" class="icon icon-dot green"></span>
             Static
             <span class="icon icon-play icon-close-tab" v-on:click="startTask('static')"></span>
+        </div>
+        <div
+            @click="activeTab = 'server'"
+            :class="[{active: activeTab === 'server'}, 'tab-item']"
+        >
+            <span v-if="serverActive" class="icon icon-dot green"></span>
+            Server
+            <span class="icon icon-play icon-close-tab" v-on:click="startTask('server')"></span>
         </div>
     </div>
 </div>
