@@ -122,8 +122,10 @@ console.log(process.version);
 const showWindow = () => {
     const position = getWindowPosition();
     window.setPosition(position.x, position.y, false);
+    window.setVisibleOnAllWorkspaces(true);
     window.show();
     window.focus();
+    window.setVisibleOnAllWorkspaces(true);
 };
 
 
