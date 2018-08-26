@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns: xmlns: xmlns:>
+<head>
+    <meta charset="utf-8">
+    <title>Settings</title>
+    <link rel="stylesheet" href="./vendor/css/photon.css" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="./settings.css" media="screen" charset="utf-8">
+    <script charset="utf-8">require('./settings')</script>
+</head>
+<body>
+<div class="window settings" id="app">
+    <div class="settings-content">
+        <div class="form-group">
+            <label>Repository directory</label>
+            <div>
+                <button class="btn btn-default" @click="changeDir">select</button> {{ dir || 'not selected' }}
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Application</label>
+            <div style="width: 350px">
+                <select class="form-control" v-model="appId" @change="changeApp">
+                    <option>accounts</option>
+                    <option>bonuses</option>
+                    <option>pfploans</option>
+                    <option>pfpinsurance</option>
+                    <option>blocks</option>
+                    <option>blocks</option>
+                    <option>common</option>
+                    <option>mortgage</option>
+                    <option>realty</option>
+                    <option>cps</option>
+                    <option>products</option>
+                    <option>invest</option>
+                    <option>payments</option>
+                    <option>pfphome</option>
+                    <option>mhome</option>
+                    <option>board</option>
+                    <option>travel</option>
+                    <option>mtravel</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <footer class="toolbar toolbar-footer">
+        <h1 class="title">
+            All settings are stored under home directory. (look tinkoff.json)
+        </h1>
+    </footer>
+</div>
+</body>
+</html>

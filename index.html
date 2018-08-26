@@ -14,17 +14,22 @@
     <header class="toolbar toolbar-header">
         <div class="toolbar-actions">
             <div class="btn-group">
-                <button class="btn btn-default" @click="startAll">
+                <button class="btn btn-large btn-default" @click="startAll">
                     start all
                 </button>
-                <button class="btn btn-default" @click="stopAll">
-                    <span class="icon icon-cancel-circled"></span>
+                <button class="btn btn-large btn-default" @click="stopAll">
+                    <div >
+                        <span :class="['icon', 'icon-cancel-circled', { red: staticActive || serverActive }]"></span>
+                    </div>
                 </button>
             </div>
-            <button class="btn btn-default" @click="changeDir">
-                {{ dir }}
+
+            <button class="btn btn-default pull-right" @click="exitApp">
+                exit
             </button>
-            <span @click="exitApp" class="icon icon-cancel close-app pull-right"></span>
+            <button class="btn btn-default pull-right" @click="openSettings">
+                settings
+            </button>
         </div>
     </header>
     <div id="term"></div>

@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, Tray, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, Tray, dialog, remote } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const { spawn } = require('child_process');
@@ -6,12 +6,30 @@ const fixPath = require('fix-path');
 
 fixPath();
 
-let dir = require('os').homedir();
-try {
-    dir = JSON.parse(fs.readFileSync(`${require('os').homedir()}/tinkoff.json`).toString()).dir;
-} catch (e) {
+function getSettingsFromDisc() {
+    const settings = {
+        appId: 'invest',
+        dir: undefined
+    };
 
+    try {
+        return Object.assign({},
+            settings,
+            JSON.parse(fs.readFileSync(`${require('os').homedir()}/tinkoff.json`).toString())
+        );
+    } catch (e) {
+        return settings;
+    }
 }
+
+function saveSettings(settingsPart) {
+    fs.writeFileSync(
+        `${require('os').homedir()}/tinkoff.json`,
+        JSON.stringify(Object.assign({}, getSettingsFromDisc(), settingsPart))
+    );
+}
+
+
 
 const assetsDirectory = path.join(__dirname, 'assets');
 
@@ -19,9 +37,8 @@ const assetsDirectory = path.join(__dirname, 'assets');
 let tray = undefined;
 let window = undefined;
 
-const appName = 'invest';
-const staticInvest = `static:${appName}`;
-const serverInvest = `server:${appName}`;
+const staticTask = 'static:';
+const serverTask = 'server:';
 
 // Don't show the app in the doc
 app.dock.hide();
@@ -39,11 +56,11 @@ app.on('window-all-closed', () => {
 const createTray = () => {
     tray = new Tray(path.join(assetsDirectory, 'atom-shape.png'));
     tray.on('right-click', () => {
-        if (!processes[staticInvest]) {
-            start(staticInvest);
+        if (!processes[staticTask]) {
+            start(staticTask);
         }
-        if (!processes[serverInvest]) {
-            start(serverInvest);
+        if (!processes[serverTask]) {
+            start(serverTask);
         }
         toggleWindow();
     });
@@ -95,15 +112,13 @@ const createWindow = () => {
 };
 
 const toggleWindow = () => {
-    debugger
-
     if (window.isVisible()) {
         window.hide()
     } else {
         showWindow()
     }
 };
-
+console.log(process.version);
 const showWindow = () => {
     const position = getWindowPosition();
     window.setPosition(position.x, position.y, false);
@@ -111,15 +126,25 @@ const showWindow = () => {
     window.focus();
 };
 
-process.chdir(dir);
-
 
 const processes = {};
 const start = task => {
     if (processes[task]) {
-        process.kill(-processes[task].pid);
+        try {
+            process.kill(-processes[task].pid)
+        } catch (e) {
+            console.error(e);
+        }
     }
-    const subproc = processes[task] = spawn('npm', ['run', task], { detached: true });
+    const { dir, appId } = getSettingsFromDisc();
+
+    if (!dir) {
+        window.webContents.send(task, 'go to settings and select portal-web directory');
+        return;
+    }
+
+    process.chdir(dir);
+    const subproc = processes[task] = spawn('npm', ['run', task + appId], { detached: true });
 
     const send = (...args) => {
         if (processes[task] === subproc || !processes[task]) {
@@ -162,16 +187,20 @@ ipcMain.on('exit', () => {
 });
 
 
-exports.selectDirectory = function selectDirectory() {
-    [dir] = dialog.showOpenDialog(window, {
-        properties: ['openDirectory']
-    });
-    fs.writeFileSync(
-        `${require('os').homedir()}/tinkoff.json`
-        , JSON.stringify({ dir }));
-    return dir;
+exports.getSettings = function getSettings() {
+    return getSettingsFromDisc();
 };
 
-exports.getDirectory = function getDirectory() {
-    return dir;
+exports.selectDirectory = function selectDirectory() {
+    [dir] = dialog.showOpenDialog(null, {
+        properties: ['openDirectory']
+    });
+
+    saveSettings({ dir });
+    return getSettingsFromDisc().dir;
+};
+
+exports.selectAppId = function selectAppId(appId) {
+    saveSettings({ appId });
+    return getSettingsFromDisc().appId;
 };

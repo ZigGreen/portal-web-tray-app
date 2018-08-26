@@ -39,7 +39,7 @@
 }
 
 .close-app:hover {
-  color: red;
+  color: #c00d0b;
 }
 
 .toolbar-actions {
@@ -48,4 +48,8 @@
 
 .green {
   color: #29a03b;
+}
+
+.red {
+  color: #c00d0b !important;
 }

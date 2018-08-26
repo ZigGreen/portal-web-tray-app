@@ -1,22 +1,23 @@
 const { ipcRenderer, remote } = require('electron');
+const path = require('path');
 const { Terminal } = require('xterm');
 const mainProcess = remote.require('./main');
 const terminalServer = new Terminal({ cols: 120 });
 const terminalStatic = new Terminal();
 const Vue = require('vue/dist/vue.min');
 
-const appName = 'invest';
-const staticInvest = `static:${appName}`;
-const serverInvest = `server:${appName}`;
+
+const staticTask = `static:`;
+const serverTask = `server:`;
 
 
-ipcRenderer.on(staticInvest, (e, x) => {
+ipcRenderer.on(staticTask, (e, x) => {
     x.split('\n').forEach(x => {
         terminalStatic.writeln(x);
     });
 });
 
-ipcRenderer.on(serverInvest, (e, x) => {
+ipcRenderer.on(serverTask, (e, x) => {
     x.split('\n').forEach(x => {
         terminalServer.writeln(x);
     });
@@ -28,19 +29,37 @@ document.addEventListener('DOMContentLoaded', () => {
         el: '#app',
         methods: {
             startAll() {
-                ipcRenderer.send('start', staticInvest);
-                ipcRenderer.send('start', serverInvest);
+                ipcRenderer.send('start', staticTask);
+                ipcRenderer.send('start', serverTask);
             },
 
             stopAll() {
-                ipcRenderer.send('stop', staticInvest);
-                ipcRenderer.send('stop', serverInvest);
+                ipcRenderer.send('stop', staticTask);
+                ipcRenderer.send('stop', serverTask);
                 terminalServer.clear();
                 terminalStatic.clear();
             },
 
-            changeDir() {
-                document.getElementById('dir').innerText = mainProcess.selectDirectory();
+            openSettings() {
+                const settingsWindow = new remote.BrowserWindow({
+                    width: 500,
+                    height: 210,
+                    fullscreenable: false,
+                    show: false,
+                    resizable: false,
+                    transparent: false,
+                    webPreferences: {
+                        // Prevents renderer process code from not running when window is
+                        // hidden
+                        backgroundThrottling: false
+                    },
+                    modal: true,
+                });
+                const settingsTemplate = path.join('file://', __dirname, 'settings.html');
+                settingsWindow.loadURL(settingsTemplate);
+
+                settingsWindow.show();
+                settingsWindow.focus();
             },
 
             exitApp() {
@@ -48,12 +67,12 @@ document.addEventListener('DOMContentLoaded', () => {
             },
 
             startTask(type) {
-                ipcRenderer.send('start', `${type}:invest`);
+                ipcRenderer.send('start', `${type}:`);
             }
         },
 
         data: {
-            dir: mainProcess.getDirectory(),
+            dir: mainProcess.getSettings().dir,
             activeTab: null,
             serverActive: false,
             staticActive: false,
@@ -66,20 +85,21 @@ document.addEventListener('DOMContentLoaded', () => {
     vueApp.activeTab = 'server';
 
     ipcRenderer.on('started', (e, x) => {
-        if (x === serverInvest) {
+        if (x === serverTask) {
             vueApp.serverActive = true;
         }
-        if (x === staticInvest) {
+        if (x === staticTask) {
             vueApp.staticActive = true;
         }
     });
 
     ipcRenderer.on('exits', (e, x) => {
-        if (x === serverInvest) {
+        if (x === serverTask) {
             vueApp.serverActive = false;
         }
-        if (x === staticInvest) {
+        if (x === staticTask) {
             vueApp.staticActive = false;
         }
     });
+
 });
