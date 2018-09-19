@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
             openSettings() {
                 const settingsWindow = new remote.BrowserWindow({
                     width: 500,
-                    height: 210,
+                    height: 380,
                     fullscreenable: false,
                     show: false,
                     resizable: false,

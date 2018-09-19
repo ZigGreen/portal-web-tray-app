@@ -2,3 +2,17 @@
   flex: 1;
   padding: 5px;
 }
+
+.settings-text-input {
+  display: flex;
+  align-items: baseline;
+  width: 350px;
+}
+
+.settings-text-input input {
+  width: 100%;
+}
+
+.settings-text-input a {
+  padding: 0 3px;
+}

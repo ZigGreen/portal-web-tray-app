@@ -9,7 +9,8 @@ fixPath();
 function getSettingsFromDisc() {
     const settings = {
         appId: 'invest',
-        dir: undefined
+        dir: undefined,
+        env: {}
     };
 
     try {
@@ -28,7 +29,6 @@ function saveSettings(settingsPart) {
         JSON.stringify(Object.assign({}, getSettingsFromDisc(), settingsPart))
     );
 }
-
 
 
 const assetsDirectory = path.join(__dirname, 'assets');
@@ -146,7 +146,10 @@ const start = task => {
     }
 
     process.chdir(dir);
-    const subproc = processes[task] = spawn('npm', ['run', task + appId], { detached: true });
+    const subproc = processes[task] = spawn('npm', ['run', task + appId], {
+        detached: true,
+        env: Object.assign({}, process.env, getSettingsFromDisc().env)
+    });
 
     const send = (...args) => {
         if (processes[task] === subproc || !processes[task]) {
@@ -200,6 +203,11 @@ exports.selectDirectory = function selectDirectory() {
 
     saveSettings({ dir });
     return getSettingsFromDisc().dir;
+};
+
+exports.serEnv = function serEnv(env) {
+    saveSettings({ env });
+    return getSettingsFromDisc().env || {};
 };
 
 exports.selectAppId = function selectAppId(appId) {
