@@ -1,0 +1,9 @@
+.proxy-content {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+.editor {
+  flex: 1;
+}

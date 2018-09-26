@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const { spawn } = require('child_process');
 const fixPath = require('fix-path');
+const proxy = require('../proxyServer/proxyServer');
 
 fixPath();
 
@@ -31,9 +32,10 @@ function saveSettings(settingsPart) {
 }
 
 
-const assetsDirectory = path.join(__dirname, 'assets');
+const assetsDirectory = path.join(__dirname, '../../../assets');
 
-
+let proxyResponse = {};
+let proxySettings = {};
 let tray = undefined;
 let window = undefined;
 
@@ -102,7 +104,7 @@ const createWindow = () => {
             backgroundThrottling: false
         }
     });
-    window.loadURL(`file://${path.join(__dirname, 'index.html')}`);
+    window.loadURL(`file://${path.join(__dirname, '../../index.html')}`);
 
     window.on('blur', () => {
         if (!window.webContents.isDevToolsOpened()) {
@@ -148,7 +150,7 @@ const start = task => {
     process.chdir(dir);
     const subproc = processes[task] = spawn('npm', ['run', task + appId], {
         detached: true,
-        env: Object.assign({}, process.env, getSettingsFromDisc().env)
+        env: Object.assign({}, process.env, getSettingsFromDisc().env, { [proxySettings.key]: 'http://localhost:5050/' })
     });
 
     const send = (...args) => {
@@ -193,7 +195,9 @@ ipcMain.on('exit', () => {
 
 
 exports.getSettings = function getSettings() {
-    return getSettingsFromDisc();
+    return Object.assign({}, getSettingsFromDisc(), {
+        proxySettings
+    })
 };
 
 exports.selectDirectory = function selectDirectory() {
@@ -213,4 +217,19 @@ exports.serEnv = function serEnv(env) {
 exports.selectAppId = function selectAppId(appId) {
     saveSettings({ appId });
     return getSettingsFromDisc().appId;
+};
+
+exports.setProxyData = function setProxy(proxyData) {
+    proxyResponse = proxyData;
+    saveSettings({ proxyData });
+    proxy.setMockData(getSettingsFromDisc().proxyData);
+    console.log(getSettingsFromDisc().proxyData);
+    return getSettingsFromDisc().proxyData;
+};
+
+exports.setProxyUrl = function setProxy(url, key) {
+    proxySettings = { url, key };
+    proxy.startServer({ api: url });
+    proxy.setMockData(getSettingsFromDisc().proxyData);
+    return proxySettings;
 };

@@ -2,11 +2,11 @@
   "name": "tinkoff-portal",
   "productName": "PortalWEB",
   "version": "1.0.0",
-  "main": "main.js",
+  "main": "./src/modules/main/main.js",
   "license": "ISC",
   "scripts": {
-    "start": "electron .",
-    "package": "electron-packager ./ --platform=darwin --arch=x64 --out=out --icon=./icon.icns --overwrite",
+    "start": "electron ./src/modules/main/main.js",
+    "package": "electron-packager ./ --platform=darwin --arch=x64 --out=out --icon=./assets/icon.icns --overwrite",
     "dmg": "electron-installer-dmg ./out/PortalWEB-darwin-x64/PortalWEB.app tinkoff-portal-web --out=builds --overwrite",
     "clean": "rm -rf ./out ./builds ./node_modules",
     "publich": "npm run clean && npm i && npm run package && npm run dmg"
@@ -19,6 +19,9 @@
   },
   "dependencies": {
     "fix-path": "^2.1.0",
+    "http-proxy": "^1.17.0",
+    "jsoneditor": "^5.24.6",
+    "ramda": "^0.25.0",
     "vue": "^2.5.17",
     "xterm": "^3.6.0"
   }

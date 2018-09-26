@@ -42,8 +42,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             openSettings() {
                 const settingsWindow = new remote.BrowserWindow({
+                    alwaysOnTop: true,
                     width: 500,
-                    height: 380,
+                    height: 470,
                     fullscreenable: false,
                     show: false,
                     resizable: false,
@@ -55,7 +56,30 @@ document.addEventListener('DOMContentLoaded', () => {
                     },
                     modal: true,
                 });
-                const settingsTemplate = path.join('file://', __dirname, 'settings.html');
+                const settingsTemplate = path.join('file://', __dirname, 'modules/settings/settings.html');
+                settingsWindow.loadURL(settingsTemplate);
+
+                settingsWindow.show();
+                settingsWindow.focus();
+            },
+
+            openProxy() {
+                const settingsWindow = new remote.BrowserWindow({
+                    alwaysOnTop: true,
+                    width: 500,
+                    height: 580,
+                    fullscreenable: false,
+                    show: false,
+                    resizable: true,
+                    transparent: false,
+                    webPreferences: {
+                        // Prevents renderer process code from not running when window is
+                        // hidden
+                        backgroundThrottling: false
+                    },
+                    modal: true,
+                });
+                const settingsTemplate = path.join('file://', __dirname, 'modules/proxy/proxy.html');
                 settingsWindow.loadURL(settingsTemplate);
 
                 settingsWindow.show();
@@ -73,6 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         data: {
             dir: mainProcess.getSettings().dir,
+            proxySettings: mainProcess.getSettings().proxySettings,
             activeTab: null,
             serverActive: false,
             staticActive: false,
@@ -101,5 +126,4 @@ document.addEventListener('DOMContentLoaded', () => {
             vueApp.staticActive = false;
         }
     });
-
 });

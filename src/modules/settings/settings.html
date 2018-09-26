@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>Settings</title>
-    <link rel="stylesheet" href="./vendor/css/photon.css" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="../../vendor/css/photon.css" media="screen" charset="utf-8">
     <link rel="stylesheet" href="./settings.css" media="screen" charset="utf-8">
     <script charset="utf-8">require('./settings')</script>
 </head>
@@ -43,9 +43,16 @@
         </div>
 
         <div class="form-group" v-for="item in [{ k: 'TRADING_API', v: 'api/trading/'}, { k: 'TINKOFF_API', v: 'api/v1/'}, { k: 'FRONT_API', v: 'api/front/'}]">
-            <label>{{ item.k }}</label>
+            <label>
+                <span v-if="proxySettings.url === env[item.k]" class="icon icon-shuffle"></span>
+                {{ item.k }}
+            </label>
             <div class="settings-text-input">
-                <input class="form-control" v-model="env[item.k]" @input="updateEnv(item.k, $event)" />
+                <input
+                    class="form-control"
+                    v-model="env[item.k]"
+                    @input="updateEnv(item.k, $event)"
+                />
                 <a
                     href="#"
                     v-for="server in ['qa4', 'uat', 'dev']"
@@ -53,6 +60,24 @@
                 >
                     {{server}}
                 </a>
+                <a
+                    href="#"
+                    @click="setProxy(item.k)"
+                >
+                    proxy
+                </a>
+            </div>
+        </div>
+        <div class="form-group" v-if="proxySettings.url">
+            <label>
+                Proxy
+            </label>
+            <div class="settings-text-input">
+                <input
+                    disabled
+                    class="form-control"
+                    v-model="proxySettings.url"
+                />
             </div>
         </div>
     </div>

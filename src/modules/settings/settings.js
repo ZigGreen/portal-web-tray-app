@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             updateEnv(key, e) {
                 this.env = mainProcess.serEnv(assign(this.env, { [key]: e.target.value }));
+            },
+            setProxy(key) {
+                this.proxySettings = mainProcess.setProxyUrl(this.env[key], key);
             }
         },
         data: Object.assign({}, mainProcess.getSettings())

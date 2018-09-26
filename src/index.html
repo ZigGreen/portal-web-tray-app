@@ -5,7 +5,7 @@
     <title>PortalWEB</title>
     <link rel="stylesheet" href="./vendor/css/photon.css" media="screen" charset="utf-8">
     <link rel="stylesheet" href="./index.css" media="screen" charset="utf-8">
-    <link rel="stylesheet" href="node_modules/xterm/dist/xterm.css"/>
+    <link rel="stylesheet" href="../node_modules/xterm/dist/xterm.css"/>
     <script charset="utf-8">require('./index')</script>
 </head>
 <body>
@@ -29,6 +29,9 @@
             </button>
             <button class="btn btn-default pull-right" @click="openSettings">
                 settings
+            </button>
+            <button :class="['btn', proxySettings.url ? 'btn-warning' : 'btn-default', 'pull-right']" @click="openProxy">
+                proxy
             </button>
         </div>
     </header>
